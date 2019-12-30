@@ -1,0 +1,19 @@
+version: '3.6'
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=username
+      - POSTGRES_PASSWORD=password
+  #      POSTGRES_DB: assembleia_db
+  psql:
+    image: postgres
+    environment:
+      - PGPASSWORD=password
+    command: psql -h postgres -U username "assembleia_db"
+    depends_on:
+      - postgres
