@@ -15,16 +15,18 @@ internal class SessaoVotacaoValidatorTests {
 
     private lateinit var validator: SessaoVotacaoValidator
     private lateinit var pautaPredicate: PautaPredicate
+    private val sessaoVotacaoPredicate = SessaoVotacaoPredicate()
     private val storePautaService: StorePautaService = mock()
 
     @BeforeEach
     fun beforeEach() {
         pautaPredicate = PautaPredicate(storePautaService = storePautaService)
-        validator = SessaoVotacaoValidator(pautaPredicate)
+        validator =
+            SessaoVotacaoValidator(pautaPredicate = pautaPredicate, sessaoVotacaoPredicate = sessaoVotacaoPredicate)
     }
 
     @Test
-    fun `returns true when pautaId exists`() {
+    fun `returns true when sessão votação is valid`() {
         val sessaoVotacao = SessaoVotacao(
             pautaId = 1L,
             startDateTime = null,

@@ -78,6 +78,50 @@ internal class SessaoVotacaoServiceTests {
     }
 
     @Test
+    fun `opens a sessão votação with default time when endDateTime is null`() {
+        val openRequest = SessaoVotacao(
+            pautaId = 1L,
+            startDateTime = LocalDateTime.parse("2025-01-05T10:51:40"),
+            endDateTime = null
+        )
+
+        val expectedDefault = openRequest.copy(
+            startDateTime = currentTime,
+            endDateTime = currentTime.plusSeconds(defaultSessaoVotacaoDuration.toSeconds())
+        )
+
+        whenever(sessaoVotacaoValidator.validate(any())).thenReturn(true)
+        whenever(storeSessaoVotacaoService.open(any())).thenReturn(true)
+
+        val result = sessaoVotacaoService.open(openRequest)
+
+        verify(storeSessaoVotacaoService).open(expectedDefault)
+        result shouldBe true
+    }
+
+    @Test
+    fun `opens a sessão votação with default time when startDateTime is null`() {
+        val openRequest = SessaoVotacao(
+            pautaId = 1L,
+            startDateTime = null,
+            endDateTime = LocalDateTime.parse("2025-01-05T10:51:40")
+        )
+
+        val expectedDefault = openRequest.copy(
+            startDateTime = currentTime,
+            endDateTime = currentTime.plusSeconds(defaultSessaoVotacaoDuration.toSeconds())
+        )
+
+        whenever(sessaoVotacaoValidator.validate(any())).thenReturn(true)
+        whenever(storeSessaoVotacaoService.open(any())).thenReturn(true)
+
+        val result = sessaoVotacaoService.open(openRequest)
+
+        verify(storeSessaoVotacaoService).open(expectedDefault)
+        result shouldBe true
+    }
+
+    @Test
     fun `throws exception when validation fail`() {
         val openRequest = SessaoVotacao(
             pautaId = 1L,
