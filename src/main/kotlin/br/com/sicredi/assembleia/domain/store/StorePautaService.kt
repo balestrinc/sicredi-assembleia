@@ -6,4 +6,6 @@ import org.springframework.stereotype.Service
 @Service
 interface StorePautaService {
     fun createPauta(pauta: Pauta): Pauta
+
+    fun getPauta(pautaId: Long): Pauta?
 }

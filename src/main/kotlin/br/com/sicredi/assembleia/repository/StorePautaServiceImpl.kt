@@ -8,6 +8,14 @@ import org.springframework.stereotype.Service
 
 @Service
 class StorePautaServiceImpl(private val repository: PautaRepository) : StorePautaService {
+    override fun getPauta(pautaId: Long): Pauta? {
+        return repository.findById(pautaId)
+            .orElse(null)
+            ?.let { pautaEntity ->
+                entityToDomainPauta(pautaEntity)
+            }
+    }
+
     override fun createPauta(pauta: Pauta): Pauta {
         val entity = domainToEntityPauta(pauta)
         val createdPauta = repository.save(entity)

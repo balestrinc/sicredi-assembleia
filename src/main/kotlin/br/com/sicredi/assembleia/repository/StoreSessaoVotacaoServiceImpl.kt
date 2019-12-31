@@ -6,7 +6,7 @@ import br.com.sicredi.assembleia.repository.converter.domainToEntitySessaoVotaca
 import org.springframework.stereotype.Service
 
 @Service
-class StoreSessaoVotacaoServiceImpl(val repository: SessaoVotacaoRepository) : StoreSessaoVotacaoService {
+class StoreSessaoVotacaoServiceImpl(private val repository: SessaoVotacaoRepository) : StoreSessaoVotacaoService {
     override fun open(sessaoVotacao: SessaoVotacao): Boolean {
         val entity = domainToEntitySessaoVotacao(sessaoVotacao)
         repository.save(entity)

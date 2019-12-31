@@ -1,5 +1,6 @@
 package br.com.sicredi.assembleia.core
 
+import br.com.sicredi.assembleia.core.validation.SessaoVotacaoValidator
 import br.com.sicredi.assembleia.domain.model.SessaoVotacao
 import br.com.sicredi.assembleia.domain.store.StoreSessaoVotacaoService
 import java.time.Duration
@@ -22,10 +23,12 @@ interface Clock {
 @Service
 class SessaoVotacaoService(
     @Value("\${system.sessaoVotacao.defaultDuration}") private val defaultSessaoVotacaoDuration: Duration,
-    val storeService: StoreSessaoVotacaoService,
-    val clock: Clock
+    private val storeService: StoreSessaoVotacaoService,
+    private val sessaoVotacaoValidator: SessaoVotacaoValidator,
+    private val clock: Clock
 ) {
     fun open(sessaoVotacao: SessaoVotacao): Boolean {
+        sessaoVotacaoValidator.validate(sessaoVotacao)
         return storeService.open(setDuration(sessaoVotacao))
     }
 
