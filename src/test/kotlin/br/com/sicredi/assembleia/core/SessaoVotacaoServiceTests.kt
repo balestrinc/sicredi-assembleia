@@ -23,7 +23,7 @@ internal class SessaoVotacaoServiceTests {
     private val sessaoVotacaoValidator: SessaoVotacaoValidator = mock()
 
     private val currentTime = LocalDateTime.parse("2020-01-01T10:50:40")
-    private val fakeClock: Clock = FakeClock(currentTime)
+    private val fakeClock: Clock = FakeClock(currentTime) // todo use mock() instead
 
     @BeforeEach
     fun beforeEach() {

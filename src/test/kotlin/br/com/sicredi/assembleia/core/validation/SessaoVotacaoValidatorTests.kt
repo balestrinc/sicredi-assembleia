@@ -1,5 +1,6 @@
 package br.com.sicredi.assembleia.core.validation
 
+import br.com.sicredi.assembleia.core.Clock
 import br.com.sicredi.assembleia.core.exception.AssembeiaValidationException
 import br.com.sicredi.assembleia.domain.model.Pauta
 import br.com.sicredi.assembleia.domain.model.SessaoVotacao
@@ -13,9 +14,10 @@ import org.junit.jupiter.api.Test
 
 internal class SessaoVotacaoValidatorTests {
 
+    private val clock: Clock = mock()
     private lateinit var validator: SessaoVotacaoValidator
     private lateinit var pautaPredicate: PautaPredicate
-    private val sessaoVotacaoPredicate = SessaoVotacaoPredicate()
+    private val sessaoVotacaoPredicate = SessaoVotacaoPredicate(clock)
     private val storePautaService: StorePautaService = mock()
 
     @BeforeEach

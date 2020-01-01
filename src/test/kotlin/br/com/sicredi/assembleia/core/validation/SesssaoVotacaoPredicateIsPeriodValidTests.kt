@@ -1,15 +1,18 @@
 package br.com.sicredi.assembleia.core.validation
 
+import br.com.sicredi.assembleia.core.Clock
 import br.com.sicredi.assembleia.core.exception.AssembeiaValidationException
 import br.com.sicredi.assembleia.domain.model.SessaoVotacao
+import com.nhaarman.mockitokotlin2.mock
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import java.time.LocalDateTime
 import org.junit.jupiter.api.Test
 
-internal class SesssaoVotacaoPredicateTests {
+internal class SesssaoVotacaoPredicateIsPeriodValidTests {
 
-    private val sessaoVotacaoPredicate = SessaoVotacaoPredicate()
+    private val clock: Clock = mock()
+    private val sessaoVotacaoPredicate = SessaoVotacaoPredicate(clock)
 
     @Test
     fun `returns true when startDatetime and endDateTime are defined and valid`() {
