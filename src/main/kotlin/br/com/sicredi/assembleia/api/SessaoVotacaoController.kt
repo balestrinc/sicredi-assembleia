@@ -2,6 +2,7 @@ package br.com.sicredi.assembleia.api
 
 import br.com.sicredi.assembleia.api.converter.wsToDomainSessaoVotacao
 import br.com.sicredi.assembleia.core.SessaoVotacaoService
+import br.com.sicredi.assembleia.domain.model.SessaoVotacao
 import br.com.sicredi.assembleia.ws.model.OpenSessaoVotacaoRequest
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PathVariable
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 class SessaoVotacaoController(private val sessaoVotacaoService: SessaoVotacaoService) {
 
     @PostMapping("/{pautaId}/sessao", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun createSessaoVotacao(@PathVariable pautaId: Long, @RequestBody requestBody: OpenSessaoVotacaoRequest): Boolean {
+    fun createSessaoVotacao(@PathVariable pautaId: Long, @RequestBody requestBody: OpenSessaoVotacaoRequest): SessaoVotacao {
         return sessaoVotacaoService.open(wsToDomainSessaoVotacao(pautaId, requestBody))
     }
 }

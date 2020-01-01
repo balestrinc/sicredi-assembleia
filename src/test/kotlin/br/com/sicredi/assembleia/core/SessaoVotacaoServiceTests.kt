@@ -29,7 +29,7 @@ internal class SessaoVotacaoServiceTests {
     fun beforeEach() {
         sessaoVotacaoService = SessaoVotacaoService(
             defaultSessaoVotacaoDuration = defaultSessaoVotacaoDuration,
-            storeService = storeSessaoVotacaoService,
+            storeSessaoVotacaoService = storeSessaoVotacaoService,
             sessaoVotacaoValidator = sessaoVotacaoValidator,
             clock = fakeClock
         )
@@ -46,11 +46,13 @@ internal class SessaoVotacaoServiceTests {
             endDateTime = tomorrow
         )
 
+        val savedSessao = openRequest.copy(id = 5L)
+
         whenever(sessaoVotacaoValidator.validate(any())).thenReturn(true)
-        whenever(storeSessaoVotacaoService.open(any())).thenReturn(true)
+        whenever(storeSessaoVotacaoService.open(any())).thenReturn(savedSessao)
 
         val result = sessaoVotacaoService.open(openRequest)
-        result shouldBe true
+        result shouldBe savedSessao
     }
 
     @Test
@@ -67,14 +69,15 @@ internal class SessaoVotacaoServiceTests {
             startDateTime = currentTime,
             endDateTime = endDateTime
         )
+        val savedSessao = expectedDefault.copy(id = 5L)
 
         whenever(sessaoVotacaoValidator.validate(any())).thenReturn(true)
-        whenever(storeSessaoVotacaoService.open(any())).thenReturn(true)
+        whenever(storeSessaoVotacaoService.open(any())).thenReturn(savedSessao)
 
         val result = sessaoVotacaoService.open(openRequest)
 
         verify(storeSessaoVotacaoService).open(expectedDefault)
-        result shouldBe true
+        result shouldBe savedSessao
     }
 
     @Test
@@ -89,14 +92,15 @@ internal class SessaoVotacaoServiceTests {
             startDateTime = currentTime,
             endDateTime = currentTime.plusSeconds(defaultSessaoVotacaoDuration.toSeconds())
         )
+        val savedSessao = expectedDefault.copy(id = 5L)
 
         whenever(sessaoVotacaoValidator.validate(any())).thenReturn(true)
-        whenever(storeSessaoVotacaoService.open(any())).thenReturn(true)
+        whenever(storeSessaoVotacaoService.open(any())).thenReturn(savedSessao)
 
         val result = sessaoVotacaoService.open(openRequest)
 
         verify(storeSessaoVotacaoService).open(expectedDefault)
-        result shouldBe true
+        result shouldBe savedSessao
     }
 
     @Test
@@ -111,14 +115,15 @@ internal class SessaoVotacaoServiceTests {
             startDateTime = currentTime,
             endDateTime = currentTime.plusSeconds(defaultSessaoVotacaoDuration.toSeconds())
         )
+        val savedSessao = expectedDefault.copy(id = 5L)
 
         whenever(sessaoVotacaoValidator.validate(any())).thenReturn(true)
-        whenever(storeSessaoVotacaoService.open(any())).thenReturn(true)
+        whenever(storeSessaoVotacaoService.open(any())).thenReturn(savedSessao)
 
         val result = sessaoVotacaoService.open(openRequest)
 
         verify(storeSessaoVotacaoService).open(expectedDefault)
-        result shouldBe true
+        result shouldBe savedSessao
     }
 
     @Test
@@ -132,7 +137,6 @@ internal class SessaoVotacaoServiceTests {
         val expectedException = RuntimeException("Error")
 
         whenever(sessaoVotacaoValidator.validate(any())).thenThrow(expectedException)
-        whenever(storeSessaoVotacaoService.open(any())).thenReturn(true)
 
         val exception = shouldThrow<RuntimeException> {
             sessaoVotacaoService.open(openRequest)

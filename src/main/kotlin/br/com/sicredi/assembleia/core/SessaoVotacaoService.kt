@@ -23,13 +23,13 @@ interface Clock {
 @Service
 class SessaoVotacaoService(
     @Value("\${system.sessaoVotacao.defaultDuration}") private val defaultSessaoVotacaoDuration: Duration,
-    private val storeService: StoreSessaoVotacaoService,
+    private val storeSessaoVotacaoService: StoreSessaoVotacaoService,
     private val sessaoVotacaoValidator: SessaoVotacaoValidator,
     private val clock: Clock
 ) {
-    fun open(sessaoVotacao: SessaoVotacao): Boolean {
+    fun open(sessaoVotacao: SessaoVotacao): SessaoVotacao {
         sessaoVotacaoValidator.validate(sessaoVotacao)
-        return storeService.open(setDuration(sessaoVotacao))
+        return storeSessaoVotacaoService.open(setDuration(sessaoVotacao))
     }
 
     private fun setDuration(sessaoVotacao: SessaoVotacao): SessaoVotacao {
