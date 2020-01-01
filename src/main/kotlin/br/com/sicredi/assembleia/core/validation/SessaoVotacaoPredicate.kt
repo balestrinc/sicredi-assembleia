@@ -17,9 +17,15 @@ class SessaoVotacaoPredicate(private val clock: Clock) {
 
     val isSessaoOpen: (SessaoVotacao) -> Boolean = { sessaoVotacao ->
         val currentTime = clock.now()
-        val isBiggerOrEqualStart = currentTime.isAfter(sessaoVotacao.startDateTime) || currentTime.isEqual(sessaoVotacao.startDateTime)
-        val isSmallerOrEqualEnd = currentTime.isBefore(sessaoVotacao.endDateTime) || currentTime.isEqual(sessaoVotacao.endDateTime)
+        val isBiggerOrEqualStart =
+            currentTime.isAfter(sessaoVotacao.startDateTime) || currentTime.isEqual(sessaoVotacao.startDateTime)
+        val isSmallerOrEqualEnd =
+            currentTime.isBefore(sessaoVotacao.endDateTime) || currentTime.isEqual(sessaoVotacao.endDateTime)
         val isBetween = isBiggerOrEqualStart && isSmallerOrEqualEnd
         if (isBetween) true else throw AssembeiaValidationException("Sessão Votação is not open")
+    }
+
+    val sessaoExists: (SessaoVotacao?, sessaoId: Long) -> Boolean = { sessaoVotacao, sessaoId ->
+        sessaoVotacao?.let { true } ?: throw AssembeiaValidationException("Sessão $sessaoId does not exist")
     }
 }

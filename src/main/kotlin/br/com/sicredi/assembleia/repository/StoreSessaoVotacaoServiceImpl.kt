@@ -13,4 +13,10 @@ class StoreSessaoVotacaoServiceImpl(private val repository: SessaoVotacaoReposit
         val savedSessao = repository.save(entity)
         return entityToDomainSessaoVotacao(savedSessao)
     }
+
+    override fun getSessaoVotacao(sessaoVotacacaoId: Long): SessaoVotacao? {
+        return repository.findById(sessaoVotacacaoId)
+            .orElse(null)
+            ?.let { entityToDomainSessaoVotacao(it) }
+    }
 }

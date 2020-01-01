@@ -6,4 +6,6 @@ import org.springframework.stereotype.Service
 @Service
 interface StoreSessaoVotacaoService {
     fun open(sessaoVotacao: SessaoVotacao): SessaoVotacao
+
+    fun getSessaoVotacao(sessaoVotacacaoId: Long): SessaoVotacao?
 }
