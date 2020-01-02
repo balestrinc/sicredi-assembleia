@@ -1,8 +1,6 @@
-package br.com.sicredi.assembleia.api
+package br.com.sicredi.assembleia.support
 
 import br.com.sicredi.assembleia.core.Clock
-import br.com.sicredi.assembleia.support.FakeClock
-import br.com.sicredi.assembleia.support.TestConstants
 import java.time.LocalDateTime
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
