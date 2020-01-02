@@ -28,4 +28,8 @@ class SessaoVotacaoPredicate(private val clock: Clock) {
     val sessaoExists: (SessaoVotacao?, sessaoId: Long) -> Boolean = { sessaoVotacao, sessaoId ->
         sessaoVotacao?.let { true } ?: throw AssembeiaValidationException("Sessão $sessaoId does not exist")
     }
+
+    val votacaoNotResulted: (SessaoVotacao) -> Boolean = { sessaoVotacao ->
+        if (!sessaoVotacao.votacaoEncerrada) true else throw AssembeiaValidationException("Sessão Votação encerrada")
+    }
 }

@@ -4,6 +4,8 @@ import br.com.sicredi.assembleia.core.validation.OpenSessaoVotacaoValidator
 import br.com.sicredi.assembleia.core.validation.UpdateSessaoVotacaoValidator
 import br.com.sicredi.assembleia.domain.model.SessaoVotacao
 import br.com.sicredi.assembleia.domain.store.StoreSessaoVotacaoService
+import br.com.sicredi.assembleia.messaging.AssembleiaTopics
+import br.com.sicredi.assembleia.messaging.MessagePublisher
 import java.time.Duration
 import java.time.LocalDateTime
 import org.springframework.beans.factory.annotation.Value
@@ -28,6 +30,7 @@ class SessaoVotacaoService(
     private val votacaoFactory: VotacaoFactory,
     private val openSessaoVotacaoValidator: OpenSessaoVotacaoValidator,
     private val updateSessaoVotacaoValidator: UpdateSessaoVotacaoValidator,
+    private val messagePublisher: MessagePublisher,
     private val clock: Clock
 ) {
     fun open(sessaoVotacao: SessaoVotacao): SessaoVotacao {
@@ -39,7 +42,15 @@ class SessaoVotacaoService(
         val sessaoVotacao = storeSessaoVotacaoService.getSessaoVotacao(sessaoId)
         updateSessaoVotacaoValidator.validate(pautaId, sessaoId, sessaoVotacao)
         val votacao = votacaoFactory.buildVotacao(sessaoVotacao!!)
-        return storeSessaoVotacaoService.update(votacao)
+        val updated = storeSessaoVotacaoService.update(votacao)
+        checkResulted(updated)
+        return updated
+    }
+
+    private fun checkResulted(sessaoVotacao: SessaoVotacao) {
+        if (sessaoVotacao.votacaoEncerrada) {
+            messagePublisher.publish(AssembleiaTopics.VOTACAO_RESULTED, sessaoVotacao)
+        }
     }
 
     private fun setDuration(sessaoVotacao: SessaoVotacao): SessaoVotacao {

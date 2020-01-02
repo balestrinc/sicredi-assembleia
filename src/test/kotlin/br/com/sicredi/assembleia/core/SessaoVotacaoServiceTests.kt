@@ -4,6 +4,8 @@ import br.com.sicredi.assembleia.core.validation.OpenSessaoVotacaoValidator
 import br.com.sicredi.assembleia.core.validation.UpdateSessaoVotacaoValidator
 import br.com.sicredi.assembleia.domain.model.SessaoVotacao
 import br.com.sicredi.assembleia.domain.store.StoreSessaoVotacaoService
+import br.com.sicredi.assembleia.messaging.AssembleiaTopics
+import br.com.sicredi.assembleia.messaging.MessagePublisher
 import br.com.sicredi.assembleia.support.FakeClock
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
@@ -24,6 +26,7 @@ internal class SessaoVotacaoServiceTests {
     private val votacaoFactory: VotacaoFactory = mock()
     private val openSessaoVotacaoValidator: OpenSessaoVotacaoValidator = mock()
     private val updateSessaoVotacaoValidator: UpdateSessaoVotacaoValidator = mock()
+    private val messagePublisher: MessagePublisher = mock()
 
     private val currentTime = LocalDateTime.parse("2020-01-01T10:50:40")
     private val fakeClock: Clock = FakeClock(currentTime) // todo use mock() instead
@@ -36,6 +39,7 @@ internal class SessaoVotacaoServiceTests {
             votacaoFactory = votacaoFactory,
             openSessaoVotacaoValidator = openSessaoVotacaoValidator,
             updateSessaoVotacaoValidator = updateSessaoVotacaoValidator,
+            messagePublisher = messagePublisher,
             clock = fakeClock
         )
     }
@@ -176,5 +180,38 @@ internal class SessaoVotacaoServiceTests {
         val result = sessaoVotacaoService.updateVotacaoResultado(pautaId, sessaoVotacaoId)
 
         result shouldBe builtSessaoVotacao
+
+        verify(messagePublisher, never()).publish(any(), any())
+    }
+
+    @Test
+    fun `publishes message when votacaoEncerrada equals true`() {
+        val startDateTime = LocalDateTime.now().minusDays(3)
+        val endDateTime = startDateTime.plusDays(1)
+
+        val sessaoVotacaoId = 2L
+        val pautaId = 1L
+
+        val sessaoVotacao = SessaoVotacao(
+            id = sessaoVotacaoId,
+            pautaId = pautaId,
+            startDateTime = startDateTime,
+            endDateTime = endDateTime
+        )
+
+        val builtSessaoVotacao = sessaoVotacao.copy(
+            votacaoEncerrada = true
+        )
+
+        whenever(updateSessaoVotacaoValidator.validate(pautaId, sessaoVotacaoId, sessaoVotacao)).thenReturn(true)
+        whenever(storeSessaoVotacaoService.getSessaoVotacao(sessaoVotacaoId)).thenReturn(sessaoVotacao)
+        whenever(votacaoFactory.buildVotacao(sessaoVotacao)).thenReturn(builtSessaoVotacao)
+        whenever(storeSessaoVotacaoService.update(builtSessaoVotacao)).thenReturn(builtSessaoVotacao)
+
+        val result = sessaoVotacaoService.updateVotacaoResultado(pautaId, sessaoVotacaoId)
+
+        result shouldBe builtSessaoVotacao
+
+        verify(messagePublisher).publish(AssembleiaTopics.VOTACAO_RESULTED, builtSessaoVotacao)
     }
 }

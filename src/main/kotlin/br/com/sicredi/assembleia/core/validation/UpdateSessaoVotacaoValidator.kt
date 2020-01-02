@@ -10,6 +10,7 @@ class UpdateSessaoVotacaoValidator(
 ) {
     fun validate(pautaId: Long, sessaoVotacaoId: Long, sessaoVotacao: SessaoVotacao?): Boolean {
         return pautaPredicate.pautaExists(pautaId) &&
-                sessaoVotacaoPredicate.sessaoExists(sessaoVotacao, sessaoVotacaoId)
+                sessaoVotacaoPredicate.sessaoExists(sessaoVotacao, sessaoVotacaoId) &&
+                sessaoVotacaoPredicate.votacaoNotResulted(sessaoVotacao!!)
     }
 }
