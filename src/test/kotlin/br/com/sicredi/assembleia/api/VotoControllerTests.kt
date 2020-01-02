@@ -4,6 +4,7 @@ import br.com.sicredi.assembleia.domain.model.Pauta
 import br.com.sicredi.assembleia.domain.model.SessaoVotacao
 import br.com.sicredi.assembleia.domain.model.Voto
 import br.com.sicredi.assembleia.domain.model.VotoOpcao
+import br.com.sicredi.assembleia.support.createAndStartMockServer
 import br.com.sicredi.assembleia.ws.model.CreatePautaRequest
 import br.com.sicredi.assembleia.ws.model.OpenSessaoVotacaoRequest
 import br.com.sicredi.assembleia.ws.model.VotoRequest
@@ -13,9 +14,14 @@ import io.kotlintest.should
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import java.time.LocalDateTime
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.mockserver.client.MockServerClient
+import org.mockserver.model.HttpRequest
+import org.mockserver.model.HttpResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
@@ -37,6 +43,18 @@ internal class VotoControllerTests {
     private var existentPautaId: Long = 0
     private var existentSessaoId: Long = 0
 
+    private lateinit var associadoApiServer: MockServerClient
+
+    @BeforeAll
+    fun beforeAll() {
+        associadoApiServer = createAndStartMockServer("localhost", 9898)
+    }
+
+    @AfterAll
+    fun afterAll() {
+        associadoApiServer.close()
+    }
+
     @BeforeEach
     fun before() {
         val createdPauta = createPauta()
@@ -52,6 +70,9 @@ internal class VotoControllerTests {
             associadoCPF = "62289608068",
             votoOpcao = "Sim"
         )
+
+        associadoApiServer.`when`(HttpRequest.request("/users/${voto.associadoCPF}"))
+            .respond(HttpResponse.response("""{"status":"ABLE_TO_VOTE"}""").withHeader("Content-Type", "application/json"))
 
         val responseBody = webClient
             .post()

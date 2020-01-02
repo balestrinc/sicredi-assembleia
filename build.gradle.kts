@@ -30,6 +30,8 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.1")
     runtimeOnly("org.postgresql:postgresql")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+
+    testImplementation("org.mock-server:mockserver-netty:5.8.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
