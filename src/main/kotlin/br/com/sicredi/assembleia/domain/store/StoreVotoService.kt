@@ -11,4 +11,6 @@ interface StoreVotoService {
     fun getTotalVotos(sessaoVotacaoId: Long): Long
 
     fun getTotalVotos(sessaoVotacaoId: Long, votoOpcao: VotoOpcao): Long
+
+    fun getVotoAssocado(sessaoVotacaoId: Long, associadoCPF: String): Voto?
 }

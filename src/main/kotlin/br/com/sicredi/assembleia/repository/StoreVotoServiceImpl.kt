@@ -22,4 +22,8 @@ class StoreVotoServiceImpl(private val votoRepository: VotoRepository) : StoreVo
     override fun getTotalVotos(sessaoVotacaoId: Long, votoOpcao: VotoOpcao): Long {
         return votoRepository.countBySessaoIdAndAndVotoOpcao(sessaoVotacaoId, votoOpcao)
     }
+
+    override fun getVotoAssocado(sessaoVotacaoId: Long, associadoCPF: String): Voto? {
+        return votoRepository.findBySessaoIdAndAndAssociadoCPF(sessaoVotacaoId, associadoCPF)
+    }
 }

@@ -1,5 +1,6 @@
 package br.com.sicredi.assembleia.repository
 
+import br.com.sicredi.assembleia.domain.model.Voto
 import br.com.sicredi.assembleia.domain.model.VotoOpcao
 import br.com.sicredi.assembleia.repository.entity.VotoEntity
 import org.springframework.data.jpa.repository.JpaRepository
@@ -10,4 +11,6 @@ interface VotoRepository : JpaRepository<VotoEntity, Long> {
     fun countBySessaoId(sessaoId: Long): Long
 
     fun countBySessaoIdAndAndVotoOpcao(sessaoId: Long, votoOpcao: VotoOpcao): Long
+
+    fun findBySessaoIdAndAndAssociadoCPF(sessaoId: Long, associadoCPF: String): Voto?
 }

@@ -25,16 +25,19 @@ internal class VotoValidatorTests {
     private val sessaoVotacaoPredicate = SessaoVotacaoPredicate(clock)
     private val storeSessaoVotacaoService: StoreSessaoVotacaoService = mock()
     private val storePautaService: StorePautaService = mock()
+    private val votoPredicate: VotoPredicate = mock()
 
     @BeforeEach
     fun beforeEach() {
         pautaPredicate = PautaPredicate(storePautaService = storePautaService)
         validator =
-            VotoValidator(pautaPredicate = pautaPredicate,
+            VotoValidator(
+                pautaPredicate = pautaPredicate,
                 sessaoVotacaoPredicate = sessaoVotacaoPredicate,
                 storeSessaoVotacaoService = storeSessaoVotacaoService,
-                associadoPredicate = associadoPredicate
-                )
+                associadoPredicate = associadoPredicate,
+                votoPredicate = votoPredicate
+            )
     }
 
     @Test
@@ -65,6 +68,7 @@ internal class VotoValidatorTests {
             votoOpcao = VotoOpcao.SIM
         )
 
+        whenever(votoPredicate.associadoDidNotVote(voto)).thenReturn(true)
         whenever(associadoPredicate.cpfEnabledToVote(voto.associadoCPF)).thenReturn(true)
         whenever(clock.now()).thenReturn(currentDateTime)
         whenever(storePautaService.getPauta(voto.pautaId)).thenReturn(pauta)
