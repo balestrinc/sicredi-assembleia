@@ -1,0 +1,1 @@
+Sicredi Assembléia API permite criar pautas, abrir sessões de votação e registrar os votos dos associados.

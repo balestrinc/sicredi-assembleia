@@ -12,3 +12,6 @@
 
 ## connect to database
 `docker-compose run --rm psql`
+
+## Swagger docs
+[Local Swagger docs](http://localhost:8080/swagger-ui.html)

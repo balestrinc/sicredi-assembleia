@@ -14,8 +14,7 @@ class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(AssembeiaValidationException::class)
     fun handleAssembeiaValidationException(ex: AssembeiaValidationException): ErrorResponse {
-        val errorResponse = ErrorResponse(status = HttpStatus.BAD_REQUEST.name, errorMessage = ex.message)
-        return errorResponse
+        return ErrorResponse(status = HttpStatus.BAD_REQUEST.name, errorMessage = ex.message)
     }
 }
 
