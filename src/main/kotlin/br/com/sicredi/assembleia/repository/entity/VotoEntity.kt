@@ -1,6 +1,7 @@
 package br.com.sicredi.assembleia.repository.entity
 
 import br.com.sicredi.assembleia.domain.model.VotoOpcao
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
@@ -22,5 +23,6 @@ data class VotoEntity(
     @Enumerated(EnumType.STRING)
     var votoOpcao: VotoOpcao,
 
+    @Column(name = "associado_cpf")
     var associadoCPF: String
 )
