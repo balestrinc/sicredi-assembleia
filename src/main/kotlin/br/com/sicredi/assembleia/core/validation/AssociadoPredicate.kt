@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class AssociadoPredicate(private val associadoApiClient: AssociadoApiClient) {
-    fun canVote(cpf: String): Boolean {
+    fun cpfEnabledToVote(cpf: String): Boolean {
         val isAbleToVote = associadoApiClient
             .checkAssociadoCPF(cpf)
             .map { associadoCPFValidationResponse ->

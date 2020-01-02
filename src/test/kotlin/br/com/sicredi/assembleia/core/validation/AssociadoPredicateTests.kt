@@ -45,7 +45,7 @@ internal class AssociadoPredicateTests {
 
         associadoPredicate = AssociadoPredicate(AssociadoApiClient(webClient))
 
-        associadoPredicate.canVote(associadoCPF) shouldBe true
+        associadoPredicate.cpfEnabledToVote(associadoCPF) shouldBe true
     }
 
     @Test
@@ -61,7 +61,7 @@ internal class AssociadoPredicateTests {
         associadoPredicate = AssociadoPredicate(AssociadoApiClient(webClient))
 
         val exception = shouldThrow<AssembeiaValidationException> {
-            associadoPredicate.canVote(associadoCPF)
+            associadoPredicate.cpfEnabledToVote(associadoCPF)
         }
         exception.message shouldBe "CPF não autorizado para votar"
     }
@@ -76,7 +76,7 @@ internal class AssociadoPredicateTests {
         associadoPredicate = AssociadoPredicate(AssociadoApiClient(webClient))
 
         val exception = shouldThrow<AssembeiaValidationException> {
-            associadoPredicate.canVote(associadoCPF)
+            associadoPredicate.cpfEnabledToVote(associadoCPF)
         }
         exception.message shouldBe "CPF Inválido"
     }

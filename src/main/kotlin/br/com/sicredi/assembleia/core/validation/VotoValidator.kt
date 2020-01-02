@@ -16,6 +16,6 @@ class VotoValidator(
         return pautaPredicate.pautaExists(voto.pautaId) &&
                 sessaoVotacaoPredicate.sessaoExists(sessaoVotacao, voto.sessaoId) &&
                 sessaoVotacaoPredicate.isSessaoOpen(sessaoVotacao!!) &&
-                associadoPredicate.canVote(voto.associadoCPF)
+                associadoPredicate.cpfEnabledToVote(voto.associadoCPF)
     }
 }

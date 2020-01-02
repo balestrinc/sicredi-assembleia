@@ -65,7 +65,7 @@ internal class VotoValidatorTests {
             votoOpcao = VotoOpcao.SIM
         )
 
-        whenever(associadoPredicate.canVote(voto.associadoCPF)).thenReturn(true)
+        whenever(associadoPredicate.cpfEnabledToVote(voto.associadoCPF)).thenReturn(true)
         whenever(clock.now()).thenReturn(currentDateTime)
         whenever(storePautaService.getPauta(voto.pautaId)).thenReturn(pauta)
         whenever(storeSessaoVotacaoService.getSessaoVotacao(voto.sessaoId)).thenReturn(sessaoVotacao)

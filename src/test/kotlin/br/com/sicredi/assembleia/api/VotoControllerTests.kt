@@ -4,6 +4,7 @@ import br.com.sicredi.assembleia.domain.model.Pauta
 import br.com.sicredi.assembleia.domain.model.SessaoVotacao
 import br.com.sicredi.assembleia.domain.model.Voto
 import br.com.sicredi.assembleia.domain.model.VotoOpcao
+import br.com.sicredi.assembleia.support.TestConstants
 import br.com.sicredi.assembleia.support.createAndStartMockServer
 import br.com.sicredi.assembleia.ws.model.CreatePautaRequest
 import br.com.sicredi.assembleia.ws.model.OpenSessaoVotacaoRequest
@@ -25,6 +26,7 @@ import org.mockserver.model.HttpResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -33,6 +35,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @AutoConfigureWebTestClient
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Import(TestConfiguration::class)
 internal class VotoControllerTests {
 
     @Autowired
@@ -111,7 +114,7 @@ internal class VotoControllerTests {
     }
 
     private fun createSessao(): SessaoVotacao {
-        val startDateTime = LocalDateTime.now().minusDays(1)
+        val startDateTime = LocalDateTime.parse(TestConstants.CURRENT_TIME)
         val endDateTime = startDateTime.plusDays(10)
         val openSessao = OpenSessaoVotacaoRequest(startDateTime = startDateTime, endDateTime = endDateTime)
 
