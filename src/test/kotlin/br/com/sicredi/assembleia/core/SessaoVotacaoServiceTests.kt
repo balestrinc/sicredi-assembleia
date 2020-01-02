@@ -1,6 +1,7 @@
 package br.com.sicredi.assembleia.core
 
-import br.com.sicredi.assembleia.core.validation.SessaoVotacaoValidator
+import br.com.sicredi.assembleia.core.validation.OpenSessaoVotacaoValidator
+import br.com.sicredi.assembleia.core.validation.UpdateSessaoVotacaoValidator
 import br.com.sicredi.assembleia.domain.model.SessaoVotacao
 import br.com.sicredi.assembleia.domain.store.StoreSessaoVotacaoService
 import br.com.sicredi.assembleia.support.FakeClock
@@ -20,7 +21,9 @@ internal class SessaoVotacaoServiceTests {
     private val defaultSessaoVotacaoDuration = Duration.parse("PT60S")
     private lateinit var sessaoVotacaoService: SessaoVotacaoService
     private val storeSessaoVotacaoService: StoreSessaoVotacaoService = mock()
-    private val sessaoVotacaoValidator: SessaoVotacaoValidator = mock()
+    private val votacaoFactory: VotacaoFactory = mock()
+    private val openSessaoVotacaoValidator: OpenSessaoVotacaoValidator = mock()
+    private val updateSessaoVotacaoValidator: UpdateSessaoVotacaoValidator = mock()
 
     private val currentTime = LocalDateTime.parse("2020-01-01T10:50:40")
     private val fakeClock: Clock = FakeClock(currentTime) // todo use mock() instead
@@ -30,7 +33,9 @@ internal class SessaoVotacaoServiceTests {
         sessaoVotacaoService = SessaoVotacaoService(
             defaultSessaoVotacaoDuration = defaultSessaoVotacaoDuration,
             storeSessaoVotacaoService = storeSessaoVotacaoService,
-            sessaoVotacaoValidator = sessaoVotacaoValidator,
+            votacaoFactory = votacaoFactory,
+            openSessaoVotacaoValidator = openSessaoVotacaoValidator,
+            updateSessaoVotacaoValidator = updateSessaoVotacaoValidator,
             clock = fakeClock
         )
     }
@@ -48,7 +53,7 @@ internal class SessaoVotacaoServiceTests {
 
         val savedSessao = openRequest.copy(id = 5L)
 
-        whenever(sessaoVotacaoValidator.validate(any())).thenReturn(true)
+        whenever(openSessaoVotacaoValidator.validate(any())).thenReturn(true)
         whenever(storeSessaoVotacaoService.open(any())).thenReturn(savedSessao)
 
         val result = sessaoVotacaoService.open(openRequest)
@@ -71,7 +76,7 @@ internal class SessaoVotacaoServiceTests {
         )
         val savedSessao = expectedDefault.copy(id = 5L)
 
-        whenever(sessaoVotacaoValidator.validate(any())).thenReturn(true)
+        whenever(openSessaoVotacaoValidator.validate(any())).thenReturn(true)
         whenever(storeSessaoVotacaoService.open(any())).thenReturn(savedSessao)
 
         val result = sessaoVotacaoService.open(openRequest)
@@ -94,7 +99,7 @@ internal class SessaoVotacaoServiceTests {
         )
         val savedSessao = expectedDefault.copy(id = 5L)
 
-        whenever(sessaoVotacaoValidator.validate(any())).thenReturn(true)
+        whenever(openSessaoVotacaoValidator.validate(any())).thenReturn(true)
         whenever(storeSessaoVotacaoService.open(any())).thenReturn(savedSessao)
 
         val result = sessaoVotacaoService.open(openRequest)
@@ -117,7 +122,7 @@ internal class SessaoVotacaoServiceTests {
         )
         val savedSessao = expectedDefault.copy(id = 5L)
 
-        whenever(sessaoVotacaoValidator.validate(any())).thenReturn(true)
+        whenever(openSessaoVotacaoValidator.validate(any())).thenReturn(true)
         whenever(storeSessaoVotacaoService.open(any())).thenReturn(savedSessao)
 
         val result = sessaoVotacaoService.open(openRequest)
@@ -127,7 +132,7 @@ internal class SessaoVotacaoServiceTests {
     }
 
     @Test
-    fun `throws exception when validation fail`() {
+    fun `open throws exception when validation fail`() {
         val openRequest = SessaoVotacao(
             pautaId = 1L,
             startDateTime = null,
@@ -136,7 +141,7 @@ internal class SessaoVotacaoServiceTests {
 
         val expectedException = RuntimeException("Error")
 
-        whenever(sessaoVotacaoValidator.validate(any())).thenThrow(expectedException)
+        whenever(openSessaoVotacaoValidator.validate(any())).thenThrow(expectedException)
 
         val exception = shouldThrow<RuntimeException> {
             sessaoVotacaoService.open(openRequest)
@@ -144,5 +149,32 @@ internal class SessaoVotacaoServiceTests {
         exception.message shouldBe expectedException.message
 
         verify(storeSessaoVotacaoService, never()).open(any())
+    }
+
+    @Test
+    fun `updates a sessão votação`() {
+        val now = LocalDateTime.now()
+        val tomorrow = now.plusDays(1)
+
+        val sessaoVotacaoId = 2L
+        val pautaId = 1L
+
+        val sessaoVotacao = SessaoVotacao(
+            id = sessaoVotacaoId,
+            pautaId = pautaId,
+            startDateTime = now,
+            endDateTime = tomorrow
+        )
+
+        val builtSessaoVotacao = sessaoVotacao.copy()
+
+        whenever(updateSessaoVotacaoValidator.validate(pautaId, sessaoVotacaoId, sessaoVotacao)).thenReturn(true)
+        whenever(storeSessaoVotacaoService.getSessaoVotacao(sessaoVotacaoId)).thenReturn(sessaoVotacao)
+        whenever(votacaoFactory.buildVotacao(sessaoVotacao)).thenReturn(builtSessaoVotacao)
+        whenever(storeSessaoVotacaoService.update(builtSessaoVotacao)).thenReturn(builtSessaoVotacao)
+
+        val result = sessaoVotacaoService.updateVotacaoResultado(pautaId, sessaoVotacaoId)
+
+        result shouldBe builtSessaoVotacao
     }
 }

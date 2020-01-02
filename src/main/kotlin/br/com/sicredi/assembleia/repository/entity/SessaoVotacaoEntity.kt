@@ -15,7 +15,11 @@ data class SessaoVotacaoEntity(
     var id: Long = 0,
 
     var pautaId: Long,
-
     var startDateTime: LocalDateTime?,
-    var endDateTime: LocalDateTime?
+    var endDateTime: LocalDateTime?,
+    val votacaoEncerrada: Boolean,
+    val pautaAprovada: Boolean,
+    val totalVotos: Long,
+    val totalVotosFavoravel: Long,
+    val totalVotosContrario: Long
 )

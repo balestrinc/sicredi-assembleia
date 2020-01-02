@@ -12,10 +12,10 @@ import io.kotlintest.shouldThrow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class SessaoVotacaoValidatorTests {
+internal class OpenSessaoVotacaoValidatorTests {
 
     private val clock: Clock = mock()
-    private lateinit var validator: SessaoVotacaoValidator
+    private lateinit var validatorOpen: OpenSessaoVotacaoValidator
     private lateinit var pautaPredicate: PautaPredicate
     private val sessaoVotacaoPredicate = SessaoVotacaoPredicate(clock)
     private val storePautaService: StorePautaService = mock()
@@ -23,8 +23,8 @@ internal class SessaoVotacaoValidatorTests {
     @BeforeEach
     fun beforeEach() {
         pautaPredicate = PautaPredicate(storePautaService = storePautaService)
-        validator =
-            SessaoVotacaoValidator(pautaPredicate = pautaPredicate, sessaoVotacaoPredicate = sessaoVotacaoPredicate)
+        validatorOpen =
+            OpenSessaoVotacaoValidator(pautaPredicate = pautaPredicate, sessaoVotacaoPredicate = sessaoVotacaoPredicate)
     }
 
     @Test
@@ -43,7 +43,7 @@ internal class SessaoVotacaoValidatorTests {
 
         whenever(storePautaService.getPauta(sessaoVotacao.pautaId)).thenReturn(pauta)
 
-        validator.validate(sessaoVotacao) shouldBe true
+        validatorOpen.validate(sessaoVotacao) shouldBe true
     }
 
     @Test
@@ -57,7 +57,7 @@ internal class SessaoVotacaoValidatorTests {
         whenever(storePautaService.getPauta(sessaoVotacao.pautaId)).thenReturn(null)
 
         val exception = shouldThrow<AssembeiaValidationException> {
-            validator.validate(sessaoVotacao)
+            validatorOpen.validate(sessaoVotacao)
         }
         exception.message shouldBe "Pauta ${sessaoVotacao.pautaId} does not exist"
     }

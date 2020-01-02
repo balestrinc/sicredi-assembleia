@@ -8,4 +8,6 @@ interface StoreSessaoVotacaoService {
     fun open(sessaoVotacao: SessaoVotacao): SessaoVotacao
 
     fun getSessaoVotacao(sessaoVotacacaoId: Long): SessaoVotacao?
+
+    fun update(sessaoVotacao: SessaoVotacao): SessaoVotacao
 }

@@ -1,6 +1,7 @@
 package br.com.sicredi.assembleia.core
 
-import br.com.sicredi.assembleia.core.validation.SessaoVotacaoValidator
+import br.com.sicredi.assembleia.core.validation.OpenSessaoVotacaoValidator
+import br.com.sicredi.assembleia.core.validation.UpdateSessaoVotacaoValidator
 import br.com.sicredi.assembleia.domain.model.SessaoVotacao
 import br.com.sicredi.assembleia.domain.store.StoreSessaoVotacaoService
 import java.time.Duration
@@ -24,12 +25,21 @@ interface Clock {
 class SessaoVotacaoService(
     @Value("\${system.sessaoVotacao.defaultDuration}") private val defaultSessaoVotacaoDuration: Duration,
     private val storeSessaoVotacaoService: StoreSessaoVotacaoService,
-    private val sessaoVotacaoValidator: SessaoVotacaoValidator,
+    private val votacaoFactory: VotacaoFactory,
+    private val openSessaoVotacaoValidator: OpenSessaoVotacaoValidator,
+    private val updateSessaoVotacaoValidator: UpdateSessaoVotacaoValidator,
     private val clock: Clock
 ) {
     fun open(sessaoVotacao: SessaoVotacao): SessaoVotacao {
-        sessaoVotacaoValidator.validate(sessaoVotacao)
+        openSessaoVotacaoValidator.validate(sessaoVotacao)
         return storeSessaoVotacaoService.open(setDuration(sessaoVotacao))
+    }
+
+    fun updateVotacaoResultado(pautaId: Long, sessaoId: Long): SessaoVotacao {
+        val sessaoVotacao = storeSessaoVotacaoService.getSessaoVotacao(sessaoId)
+        updateSessaoVotacaoValidator.validate(pautaId, sessaoId, sessaoVotacao)
+        val votacao = votacaoFactory.buildVotacao(sessaoVotacao!!)
+        return storeSessaoVotacaoService.update(votacao)
     }
 
     private fun setDuration(sessaoVotacao: SessaoVotacao): SessaoVotacao {

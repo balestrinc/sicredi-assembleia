@@ -6,28 +6,11 @@ data class SessaoVotacao(
     val id: Long = 0,
     val pautaId: Long,
     val startDateTime: LocalDateTime?,
-    val endDateTime: LocalDateTime?
+    val endDateTime: LocalDateTime?,
+
+    var votacaoEncerrada: Boolean = false,
+    var pautaAprovada: Boolean = false,
+    var totalVotos: Long = 0,
+    var totalVotosFavoravel: Long = 0,
+    var totalVotosContrario: Long = 0
 )
-//
-// class SessaoVotacaoResultado (
-//     val sessaoVotacao: SessaoVotacao,
-//     val totalVotos: Long,
-//     val votosFavoraveis: Long,
-//     val aprovado: Boolean
-// )
-//
-// import org.hibernate.validator.constraints.br.CPF
-// data class Associado(
-//     val cpf: CPF
-// )
-//
-// enum class Voto (val voto: Boolean){
-//     SIM(true),
-//     NAO(false)
-// }
-//
-// data class SessaoVoto(
-//     val pauta: Pauta,
-//     val associado: Associado,
-//     val voto: Voto
-// )

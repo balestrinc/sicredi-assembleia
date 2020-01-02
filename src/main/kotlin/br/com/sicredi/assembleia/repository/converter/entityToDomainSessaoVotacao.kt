@@ -8,6 +8,11 @@ fun entityToDomainSessaoVotacao(entity: SessaoVotacaoEntity): SessaoVotacao {
         id = entity.id,
         pautaId = entity.pautaId,
         startDateTime = entity.startDateTime,
-        endDateTime = entity.endDateTime
+        endDateTime = entity.endDateTime,
+        votacaoEncerrada = entity.votacaoEncerrada,
+        pautaAprovada = entity.pautaAprovada,
+        totalVotos = entity.totalVotos,
+        totalVotosContrario = entity.totalVotosContrario,
+        totalVotosFavoravel = entity.totalVotosFavoravel
     )
 }

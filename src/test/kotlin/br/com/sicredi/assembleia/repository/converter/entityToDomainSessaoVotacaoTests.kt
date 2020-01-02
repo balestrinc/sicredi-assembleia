@@ -16,14 +16,24 @@ internal class entityToDomainSessaoVotacaoTests {
             id = 5L,
             pautaId = 1L,
             startDateTime = startDateTime,
-            endDateTime = endDateTime
+            endDateTime = endDateTime,
+            votacaoEncerrada = true,
+            pautaAprovada = false,
+            totalVotos = 700,
+            totalVotosContrario = 500,
+            totalVotosFavoravel = 200
         )
 
         val domain = SessaoVotacao(
             id = 5L,
             pautaId = 1L,
             startDateTime = startDateTime,
-            endDateTime = endDateTime
+            endDateTime = endDateTime,
+            votacaoEncerrada = true,
+            pautaAprovada = false,
+            totalVotos = 700,
+            totalVotosContrario = 500,
+            totalVotosFavoravel = 200
         )
 
         entityToDomainSessaoVotacao(entity) shouldBe domain

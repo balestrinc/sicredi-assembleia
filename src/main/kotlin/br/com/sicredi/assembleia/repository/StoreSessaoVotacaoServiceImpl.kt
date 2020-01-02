@@ -19,4 +19,8 @@ class StoreSessaoVotacaoServiceImpl(private val repository: SessaoVotacaoReposit
             .orElse(null)
             ?.let { entityToDomainSessaoVotacao(it) }
     }
+
+    override fun update(sessaoVotacao: SessaoVotacao): SessaoVotacao {
+        return open(sessaoVotacao)
+    }
 }
