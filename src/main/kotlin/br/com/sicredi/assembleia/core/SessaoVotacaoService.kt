@@ -9,21 +9,10 @@ import br.com.sicredi.assembleia.messaging.MessagePublisher
 import java.time.Duration
 import java.time.LocalDateTime
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 
-@Component
-class ClockImpl : Clock {
-    override fun now(): LocalDateTime {
-        return LocalDateTime.now()
-    }
-}
-
-interface Clock {
-    fun now(): LocalDateTime
-}
-
 @Service
+// todo refactor too many args
 class SessaoVotacaoService(
     @Value("\${system.sessaoVotacao.defaultDuration}") private val defaultSessaoVotacaoDuration: Duration,
     private val storeSessaoVotacaoService: StoreSessaoVotacaoService,
