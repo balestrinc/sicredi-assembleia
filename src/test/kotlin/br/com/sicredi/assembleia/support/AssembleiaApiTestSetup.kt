@@ -64,10 +64,10 @@ class AssembleiaApiTestSetup {
         return mapper.readValue(responseBody!!)
     }
 
-    fun createSessao(): SessaoVotacao {
-        val startDateTime = LocalDateTime.parse(TestConstants.CURRENT_TIME)
-        val endDateTime = startDateTime.plusDays(10)
-        val openSessao = OpenSessaoVotacaoRequest(startDateTime = startDateTime, endDateTime = endDateTime)
+    fun createSessao(startDateTime: LocalDateTime? = null, endDateTime: LocalDateTime? = null): SessaoVotacao {
+        val start = startDateTime ?: LocalDateTime.parse(TestConstants.CURRENT_TIME)
+        val end = endDateTime ?: start.plusDays(1)
+        val openSessao = OpenSessaoVotacaoRequest(startDateTime = start, endDateTime = end)
 
         val responseBody = webClient
             .post()
