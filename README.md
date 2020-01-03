@@ -1,4 +1,4 @@
-# Sicredi Assembléia
+# Sicredi Assembléia     <img src="https://github.com/balestrinc/sicredi-assembleia/workflows/CI%20Sicredi%20Assembl%C3%A9ia/badge.svg" />
 
 ## Running
 
