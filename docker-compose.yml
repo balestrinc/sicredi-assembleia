@@ -9,6 +9,8 @@ services:
     environment:
       - POSTGRES_USER=username
       - POSTGRES_PASSWORD=password
+    volumes:
+      - ./scripts/setup.sql:/docker-entrypoint-initdb.d/init.sql
   psql:
     image: postgres
     environment:

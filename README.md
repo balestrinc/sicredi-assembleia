@@ -1,17 +1,52 @@
 # Sicredi Assembléia
 
+## Running
 
-## setup inicial:
-`docker-compose up`
-`SYSTEM_ENV="dev" PGPASSWORD="password" ./scripts/setup-pg.sh 'localhost' 5433 'username'`
+### Pre requisites
+ - Docker
+ - Docker-compose
+ - Java JDK 11
+ 
+### Running tests
+1. Start the application dependencies
+```shell script
+docker-compose up
+```
 
+2. Run test
+```shell script
+./gradlew clean check
+```
 
-## list databases:
-`PGPASSWORD="password" psql -h localhost -p 5433 -U username  -c "\l"`
+### Running App
 
+1. Start the application dependencies
+```shell script
+docker-compose up
+```
 
-## connect to database
-`docker-compose run --rm psql`
+2. Run the application
 
-## Swagger docs
-[Local Swagger docs](http://localhost:8080/swagger-ui.html)
+```shell script
+./gradlew :bootRun
+```
+
+The Application will be available at [localhost](http://localhost:8080)
+
+#### Swagger docs
+[Swagger docs](http://localhost:8080/swagger-ui.html)
+
+## Connecting to the databases
+```
+docker-compose run --rm psql
+```
+
+### list databases
+```
+\l
+```
+
+### connect to app database
+```
+\c assembleia_db
+```
